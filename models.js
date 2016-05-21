@@ -17,28 +17,19 @@ var activitySchema = new mongoose.Schema({
 
 var transitSchema = new mongoose.Schema({
 	"username": String,
-    "activity_id": String,
+    "activityType": String,
     "startTime": Date,
     "startLat": Number,
     "startLong": Number,
     "endTime": Date,
     "endLat": Number,
-    "endLong": Number
+    "endLong": Number,
+    "credit": Number
 
 }, {
 	collection: "transits"
 });
 
-
-var creditSchema = new mongoose.Schema({
-    "transit_id": String,
-    "credit": Number
-
-}, {
-	collection: "credits"
-});
-
 exports.user = mongoose.model('users',userSchema);
 exports.activity=mongoose.model('activities', activitySchema);
 exports.transit = mongoose.model('transits',transitSchema);
-exports.credit = mongoose.model('credits',creditSchema);
