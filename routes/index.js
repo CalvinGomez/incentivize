@@ -48,8 +48,12 @@ router.get('/insertTransit', function(req, res, next) {
 
 	transit.save(function(err, newUser) {
         if (err) {
+        	res.send({'status': 'Not OK'})
         	throw err;
-        }  
+        }
+        else {
+        	res.send({'status': 'OK'})        	
+        }
     });
  	// res.send(transit);
 });
@@ -60,6 +64,28 @@ router.get('/retrieveTransit', function(req, res, next) {
   	models.transit.find({'username': username}, function(err, transitData){
         if (!err) {
         	res.send(transitData);       	
+        } 
+        else { 
+        	console.log(err);
+        }
+    });
+});
+
+// return all user data
+router.get('/retrieveTotalCredits', function(req, res, next) {
+	var username = req.param('username');
+  	models.transit.find({'username': username}, function(err, data){
+		var total = 0;
+        if (!err) {
+        	var results = []
+        	// console.log(total);
+        	for (var i = 0; i < data.length; i++) {
+        		results.push(data[i].credit);
+        		total = total + data[i].credit;
+        		// console.log(total)
+        	}
+        	console.log(total);
+            res.send(total);
         } 
         else { 
         	console.log(err);
