@@ -20,42 +20,69 @@ router.get('/users', function(req, res, next) {
     });
 });
 
-// add transit log for specific user
+// add/update transit log for specific user
 router.get('/insertTransit', function(req, res, next) {
 	var username = req.param('username');
 	var activityType = req.param('activityType');
-	// var startTime = req.param('startTime');
-	var startTime = Date.now();
-	var startLat = req.param('startLat');
-	var startLong = req.param('startLong');
-	// var endTime = req.param('endTime');
-	var endTime = Date.now();
-	var endLat = req.param('endLat');
-	var endLong = req.param('endLong');
-	var credits = req.param('credits');
+	var lat = req.param('latitude');
+	var long = req.param('longitude');
+	var update = req.param('update');
+	var time = Date.now();
+	if (update=='false') {
+		var transit = new models.transit({
+			"username": username,
+		    "activityType": activityType,
+		    "startTime": Date(time),
+		    "startLat": Number(lat),
+		    "startLong": Number(long),
+		    "endTime": null,
+		    "endLat": null,
+		    "endLong": null,
+		    "credit": 0
+		});		
 
-	var transit = new models.transit({
-		"username": username,
-	    "activityType": activityType,
-	    "startTime": Date(startTime),
-	    "startLat": Number(startLat),
-	    "startLong": Number(startLong),
-	    "endTime": Date(endTime),
-	    "endLat": Number(endLat),
-	    "endLong": Number(endLong),
-	    "credit": Number(credits)
-	});
+		transit.save(function(err, newUser) {
+	        if (err) {
+	        	// res.send({'status': 'Not OK'})
+	        	throw err;
+	        }
+	        // else {
+	        // 	res.send({'status': 'OK'})        	
+	        // }
+	    });
+		res.send(transit);
+	}
+	else {
+		models.transit.find({'username': username}, function(err, transitData){
+	        if (!err) {
+	        	models.transit.findById(transitData[transitData.length-1]._id, function(err, singleTransitData){
+			        if (!err) {
+			        	singleTransitData.endTime = Date.now();
+			        	singleTransitData.endLat = Number(lat);
+			        	singleTransitData.endLong = Number(long);
+			        	singleTransitData.credit = singleTransitData.credit+0.1;	
 
-	transit.save(function(err, newUser) {
-        if (err) {
-        	res.send({'status': 'Not OK'})
-        	throw err;
-        }
-        else {
-        	res.send({'status': 'OK'})        	
-        }
-    });
- 	// res.send(transit);
+						singleTransitData.save(function(err, newUser) {
+					        if (err) {
+					        	// res.send({'status': 'Not OK'})
+					        	throw err;
+					        }
+					        // else {
+					        // 	res.send({'status': 'OK'})        	
+					        // }
+					    });
+			       		res.send(singleTransitData);  	
+			        } 
+			        else { 
+			        	console.log(err);
+			        }
+    			});      	
+	        } 
+	        else { 
+	        	console.log(err);
+	        }
+    	});
+	} 
 });
 
 // return all transit logs for specific user
