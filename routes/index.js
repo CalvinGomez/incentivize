@@ -60,7 +60,8 @@ router.get('/insertTransit', function(req, res, next) {
 			        	singleTransitData.endTime = Date.now();
 			        	singleTransitData.endLat = Number(lat);
 			        	singleTransitData.endLong = Number(long);
-			        	singleTransitData.credit = singleTransitData.credit+0.1;	
+			        	singleTransitData.credit = singleTransitData.credit+0.1;
+			        	singleTransitData.activityType = activityType;	
 
 						singleTransitData.save(function(err, newUser) {
 					        if (err) {
