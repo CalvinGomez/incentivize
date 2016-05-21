@@ -10,7 +10,6 @@ var users = require('./routes/users');
 var mongoose = require('mongoose');
 var app = express();
 
-
 require("dotenv").load();
 var models = require("./models");
 var db = mongoose.connection;

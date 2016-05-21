@@ -2,15 +2,13 @@ var mongoose = require('mongoose');
 
 var userSchema = new mongoose.Schema({
 	"username": String,
-    "email": String,
-    "password": String,
     "device_id": String
 
 }, {
 	collection: "users"
 });
 
-var acitivitySchema = new mongoose.Schema({
+var activitySchema = new mongoose.Schema({
     "activityType": String
 }, {
     collection: "activities"
@@ -40,7 +38,7 @@ var creditSchema = new mongoose.Schema({
 	collection: "credits"
 });
 
-exports.User = mongoose.model('users',userSchema);
-exports.theNews=mongoose.model('activities', activitySchema);
-exports.Course = mongoose.model('transits',transitSchema);
-exports.OverallRating = mongoose.model('credits',creditSchema);
+exports.user = mongoose.model('users',userSchema);
+exports.activity=mongoose.model('activities', activitySchema);
+exports.transit = mongoose.model('transits',transitSchema);
+exports.credit = mongoose.model('credits',creditSchema);
