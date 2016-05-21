@@ -7,8 +7,20 @@ var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
-
+var mongoose = require('mongoose');
 var app = express();
+
+
+require("dotenv").load();
+var models = require("./models");
+var db = mongoose.connection;
+
+// Database Connection
+mongoose.connect(process.env.MONGOLAB_URI || process.env.MONGO_URI);
+db.on('error', console.error.bind(console, 'Mongo DB Connection Error:'));
+db.once('open', function(callback) {
+    console.log("Database connected successfully.");
+});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
