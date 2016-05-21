@@ -77,15 +77,13 @@ router.get('/retrieveTotalCredits', function(req, res, next) {
   	models.transit.find({'username': username}, function(err, data){
 		var total = 0;
         if (!err) {
-        	var results = []
-        	// console.log(total);
         	for (var i = 0; i < data.length; i++) {
-        		results.push(data[i].credit);
         		total = total + data[i].credit;
-        		// console.log(total)
         	}
-        	console.log(total);
-            res.send(total);
+        	var creditSum = {
+        		'credits':total
+        	}
+            res.send(creditSum);
         } 
         else { 
         	console.log(err);
