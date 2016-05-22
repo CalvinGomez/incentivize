@@ -60,7 +60,14 @@ router.get('/insertTransit', function(req, res, next) {
 			        	singleTransitData.endTime = Date.now();
 			        	singleTransitData.endLat = Number(lat);
 			        	singleTransitData.endLong = Number(long);
-			        	singleTransitData.credit = singleTransitData.credit+0.1;
+			        	var dist = calcDistance(singleTransitData.startLat, singleTransitData.startLong, lat, long);
+			        	console.log("Distance: "+dist);
+			        	if (singleTransitData.activityType == "walk") {
+				        	singleTransitData.credit = singleTransitData.credit*5;
+			        	}
+			        	else {	
+				        	singleTransitData.credit = singleTransitData.credit*2.5;
+			        	}
 			        	singleTransitData.activityType = activityType;	
 
 						singleTransitData.save(function(err, newUser) {
@@ -118,5 +125,22 @@ router.get('/retrieveTotalCredits', function(req, res, next) {
         }
     });
 });
+
+function calcDistance(beginLat,beginLong,endLat,endLong) {
+   "use strict";
+   let R = 6371;
+   var latDiff = endLat - beginLat;
+   latDiff = this.convertRadians(latDiff);
+   var longDiff = endLong - beginLong;
+   longDiff = this.convertRadians(longDiff);
+   var a = Math.sin(latDiff/2) * Math.sin(latDiff/2) + Math.cos(this.convertRadians(beginLat)) * Math.cos(this.convertRadians(endLat)) * Math.sin(longDiff/2) * Math.sin(longDiff/2);
+   var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+   var d = R * c;
+   return d;
+ }
+ 
+function convertRadians(coord) {
+   return coord * Math.PI / 180;
+ }
 
 module.exports = router;
